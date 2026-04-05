@@ -73,39 +73,38 @@ class TestScanMoc:
 
 
 @pytest.mark.unit
-@pytest.mark.xfail(reason="API mismatch - to fix")
 class TestSyncMocDryRun:
     """Tests for sync_moc in dry-run mode."""
 
     def test_dry_run_no_changes(self, tmp_vault: Path) -> None:
         """In dry-run mode no files should be modified."""
         moc = _create_moc(
-            tmp_vault, "01-КОНТРАГЕНТЫ", "MOC Контрагенты", ["ООО Пример"]
+            tmp_vault, "01-КОНТРАГЕНТЫ", "_MOC", ["ООО Пример"]
         )
         _create_note(tmp_vault, "01-КОНТРАГЕНТЫ", "ООО Новый")
         original = moc.read_text(encoding="utf-8")
-        sync_moc(tmp_vault, dry_run=True)
+        sync_moc(tmp_vault, folder_filter="01-КОНТРАГЕНТЫ", dry_run=True)
         assert moc.read_text(encoding="utf-8") == original
 
     def test_fix_mode_updates_moc(self, tmp_vault: Path) -> None:
         """In fix mode, new notes in the folder should be added to the MOC."""
         moc = _create_moc(
-            tmp_vault, "01-КОНТРАГЕНТЫ", "MOC Контрагенты", ["ООО Пример"]
+            tmp_vault, "01-КОНТРАГЕНТЫ", "_MOC", ["ООО Пример"]
         )
         _create_note(tmp_vault, "01-КОНТРАГЕНТЫ", "ООО Новый")
-        sync_moc(tmp_vault, dry_run=False)
+        sync_moc(tmp_vault, folder_filter="01-КОНТРАГЕНТЫ", fix=True)
         content = moc.read_text(encoding="utf-8")
         assert "ООО Новый" in content
 
     def test_idempotent_sync(self, tmp_vault: Path) -> None:
         """Running sync twice should not duplicate links."""
         moc = _create_moc(
-            tmp_vault, "01-КОНТРАГЕНТЫ", "MOC Контрагенты", ["ООО Пример"]
+            tmp_vault, "01-КОНТРАГЕНТЫ", "_MOC", ["ООО Пример"]
         )
         _create_note(tmp_vault, "01-КОНТРАГЕНТЫ", "ООО Новый")
-        sync_moc(tmp_vault, dry_run=False)
+        sync_moc(tmp_vault, folder_filter="01-КОНТРАГЕНТЫ", fix=True)
         content_after_first = moc.read_text(encoding="utf-8")
-        sync_moc(tmp_vault, dry_run=False)
+        sync_moc(tmp_vault, folder_filter="01-КОНТРАГЕНТЫ", fix=True)
         content_after_second = moc.read_text(encoding="utf-8")
         assert content_after_first == content_after_second
 

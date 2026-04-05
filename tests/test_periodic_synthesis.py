@@ -50,84 +50,51 @@ def _create_daily_notes(vault: Path, start: date, count: int) -> list[Path]:
 
 
 @pytest.mark.unit
-@pytest.mark.xfail(reason="API mismatch - to fix")
 class TestSynthesizeWeekly:
     """Tests for weekly synthesis."""
 
     def test_creates_weekly_note(self, tmp_vault: Path) -> None:
         """Weekly synthesis should create a retrospective note."""
         _create_daily_notes(tmp_vault, date(2026, 3, 30), 7)
-        result = synthesize_weekly(
-            vault=tmp_vault,
-            week_start=date(2026, 3, 30),
-        )
-        assert isinstance(result, (Path, str))
-        if isinstance(result, Path):
-            assert result.exists()
+        content, path = synthesize_weekly(tmp_vault, date(2026, 3, 30))
+        assert isinstance(content, str)
+        assert isinstance(path, Path)
 
     def test_weekly_frontmatter_has_period(self, tmp_vault: Path) -> None:
         """The weekly note frontmatter should specify period as 'неделя'."""
         _create_daily_notes(tmp_vault, date(2026, 3, 30), 7)
-        result = synthesize_weekly(
-            vault=tmp_vault,
-            week_start=date(2026, 3, 30),
-        )
-        if isinstance(result, Path):
-            content = result.read_text(encoding="utf-8")
-            assert "неделя" in content.lower() or "week" in content.lower()
+        content, _ = synthesize_weekly(tmp_vault, date(2026, 3, 30))
+        assert "неделя" in content.lower() or "week" in content.lower()
 
     def test_weekly_frontmatter_has_dates(self, tmp_vault: Path) -> None:
         """The weekly note should include start and end dates."""
         _create_daily_notes(tmp_vault, date(2026, 3, 30), 7)
-        result = synthesize_weekly(
-            vault=tmp_vault,
-            week_start=date(2026, 3, 30),
-        )
-        if isinstance(result, Path):
-            content = result.read_text(encoding="utf-8")
-            assert "2026-03-30" in content
+        content, _ = synthesize_weekly(tmp_vault, date(2026, 3, 30))
+        assert "2026-03-30" in content
 
 
 @pytest.mark.unit
-@pytest.mark.xfail(reason="API mismatch - to fix")
 class TestSynthesizeMonthly:
     """Tests for monthly synthesis."""
 
     def test_creates_monthly_note(self, tmp_vault: Path) -> None:
         """Monthly synthesis should create a retrospective note."""
         _create_daily_notes(tmp_vault, date(2026, 3, 1), 5)
-        result = synthesize_monthly(
-            vault=tmp_vault,
-            year=2026,
-            month=3,
-        )
-        assert isinstance(result, (Path, str))
-        if isinstance(result, Path):
-            assert result.exists()
+        content, path = synthesize_monthly(tmp_vault, date(2026, 3, 15))
+        assert isinstance(content, str)
+        assert isinstance(path, Path)
 
     def test_monthly_frontmatter_has_period(self, tmp_vault: Path) -> None:
         """The monthly note frontmatter should specify period as 'месяц'."""
         _create_daily_notes(tmp_vault, date(2026, 3, 1), 5)
-        result = synthesize_monthly(
-            vault=tmp_vault,
-            year=2026,
-            month=3,
-        )
-        if isinstance(result, Path):
-            content = result.read_text(encoding="utf-8")
-            assert "месяц" in content.lower() or "month" in content.lower()
+        content, _ = synthesize_monthly(tmp_vault, date(2026, 3, 15))
+        assert "месяц" in content.lower() or "month" in content.lower()
 
     def test_monthly_frontmatter_has_dates(self, tmp_vault: Path) -> None:
         """The monthly note should reference the month dates."""
         _create_daily_notes(tmp_vault, date(2026, 3, 1), 5)
-        result = synthesize_monthly(
-            vault=tmp_vault,
-            year=2026,
-            month=3,
-        )
-        if isinstance(result, Path):
-            content = result.read_text(encoding="utf-8")
-            assert "2026-03" in content
+        content, _ = synthesize_monthly(tmp_vault, date(2026, 3, 15))
+        assert "2026-03" in content
 
 
 # ---------------------------------------------------------------------------
