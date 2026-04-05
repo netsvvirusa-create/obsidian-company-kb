@@ -1,0 +1,36 @@
+filters:
+  and:
+    - file.inFolder("02-ДОГОВОРЫ")
+    - 'статус == "активный"'
+formulas:
+  дней_до_окончания: 'if(дата_окончания, (date(дата_окончания) - today()).days, "")'
+  просрочен: 'if(дата_окончания, date(дата_окончания) < today(), false)'
+properties:
+  formula.дней_до_окончания:
+    displayName: "Дней до окончания"
+  formula.просрочен:
+    displayName: "Просрочен"
+views:
+  - type: table
+    name: "Все активные"
+    order:
+      - file.name
+      - контрагент
+      - сумма
+      - дата_окончания
+      - formula.дней_до_окончания
+      - ответственный_наш
+      - подписант_контрагента
+    groupBy:
+      property: ответственный_наш
+      direction: ASC
+    summaries:
+      сумма: Sum
+  - type: cards
+    name: "Карточки"
+    order:
+      - file.name
+      - контрагент
+      - сумма
+      - статус
+      - подписант_контрагента

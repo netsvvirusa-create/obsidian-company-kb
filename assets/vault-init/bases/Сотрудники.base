@@ -1,0 +1,26 @@
+filters:
+  and:
+    - file.inFolder("04-СОТРУДНИКИ")
+    - 'статус == "активный"'
+formulas:
+  стаж: 'if(дата_найма, ((now() - date(дата_найма)).days / 365).round(1).toString() + " лет", "")'
+properties:
+  formula.стаж:
+    displayName: "Стаж"
+views:
+  - type: table
+    name: "По отделам"
+    order:
+      - file.name
+      - должность
+      - formula.стаж
+      - руководитель
+    groupBy:
+      property: отдел
+      direction: ASC
+  - type: cards
+    name: "Карточки"
+    order:
+      - file.name
+      - должность
+      - отдел

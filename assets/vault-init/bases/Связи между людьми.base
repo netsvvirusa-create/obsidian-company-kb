@@ -1,0 +1,62 @@
+filters:
+  or:
+    - file.inFolder("04-СОТРУДНИКИ")
+    - file.inFolder("05-КОНТАКТЫ")
+formulas:
+  кол_во_связей: 'if(связи, связи.length, 0)'
+  тип_лица: 'if(type == "сотрудник", "Сотрудник", "Контакт")'
+properties:
+  formula.кол_во_связей:
+    displayName: "Связей"
+  formula.тип_лица:
+    displayName: "Тип"
+views:
+  - type: table
+    name: "Все люди со связями"
+    filters:
+      and:
+        - 'if(связи, связи.length > 0, false)'
+    order:
+      - file.name
+      - formula.тип_лица
+      - связи
+      - formula.кол_во_связей
+    groupBy:
+      property: formula.тип_лица
+      direction: ASC
+    summaries:
+      formula.кол_во_связей: Sum
+  - type: table
+    name: "Сотрудники"
+    filters:
+      and:
+        - file.inFolder("04-СОТРУДНИКИ")
+    order:
+      - file.name
+      - должность
+      - отдел
+      - связи
+      - formula.кол_во_связей
+    groupBy:
+      property: отдел
+      direction: ASC
+  - type: table
+    name: "Контакты контрагентов"
+    filters:
+      and:
+        - file.inFolder("05-КОНТАКТЫ")
+    order:
+      - file.name
+      - контрагент
+      - роль
+      - связи
+      - formula.кол_во_связей
+    groupBy:
+      property: контрагент
+      direction: ASC
+  - type: cards
+    name: "Карточки"
+    order:
+      - file.name
+      - formula.тип_лица
+      - связи

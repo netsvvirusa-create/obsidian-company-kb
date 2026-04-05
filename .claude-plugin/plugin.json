@@ -1,0 +1,8 @@
+{
+  "schema_version": "1.0",
+  "name": "obsidian-company-kb",
+  "description": "Manage corporate knowledge base in Obsidian: counterparties, contracts, employees, contacts, negotiations, operations, strategy, document generation with grammar checking. Use when working with company data, contracts, specifications in Obsidian.",
+  "version": "1.0.0",
+  "skills": [{"name": "obsidian-company-kb", "path": "SKILL.md"}],
+  "dependencies": ["obsidian@obsidian-skills"]
+}

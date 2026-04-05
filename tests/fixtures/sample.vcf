@@ -1,0 +1,16 @@
+BEGIN:VCARD
+VERSION:3.0
+FN:Сидоров Алексей Петрович
+TEL;TYPE=WORK:+7 (495) 123-45-67
+EMAIL;TYPE=WORK:sidorov@example.com
+TITLE:Технический директор
+ORG:ООО ТестКомпания
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+FN:Козлова Мария Ивановна
+TEL;TYPE=WORK:+7 (495) 987-65-43
+EMAIL;TYPE=WORK:kozlova@example.com
+TITLE:Финансовый директор
+ORG:ООО Партнёр
+END:VCARD

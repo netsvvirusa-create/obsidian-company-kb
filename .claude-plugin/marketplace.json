@@ -1,0 +1,8 @@
+{
+  "schema_version": "1.0",
+  "packages": [{
+    "name": "obsidian-company-kb",
+    "description": "Corporate knowledge base management for Obsidian vaults",
+    "skills_path": "."
+  }]
+}

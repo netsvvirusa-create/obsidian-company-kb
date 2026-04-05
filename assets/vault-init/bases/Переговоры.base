@@ -1,0 +1,24 @@
+filters:
+  and:
+    - file.inFolder("06-ПЕРЕГОВОРЫ")
+views:
+  - type: table
+    name: "Все переговоры"
+    order:
+      - file.name
+      - дата
+      - контрагент
+      - тема
+      - формат
+      - статус
+    groupBy:
+      property: контрагент
+      direction: ASC
+  - type: table
+    name: "Последние 30"
+    limit: 30
+    order:
+      - file.name
+      - дата
+      - контрагент
+      - тема

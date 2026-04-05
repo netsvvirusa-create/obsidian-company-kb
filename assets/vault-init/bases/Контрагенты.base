@@ -1,0 +1,30 @@
+filters:
+  and:
+    - file.inFolder("01-КОНТРАГЕНТЫ")
+    - 'file.ext == "md"'
+formulas:
+  последнее_обновление: 'file.mtime.relative()'
+  кол_во_контактов: 'if(контактные_лица, контактные_лица.length, 0)'
+properties:
+  formula.последнее_обновление:
+    displayName: "Обновлено"
+  formula.кол_во_контактов:
+    displayName: "Контактов"
+views:
+  - type: table
+    name: "Все контрагенты"
+    order:
+      - file.name
+      - категория
+      - formula.кол_во_контактов
+      - статус
+      - formula.последнее_обновление
+    groupBy:
+      property: категория
+      direction: ASC
+  - type: list
+    name: "Быстрый список"
+    order:
+      - file.name
+      - категория
+      - статус

@@ -1,0 +1,25 @@
+filters:
+  and:
+    - file.inFolder("07-ОПЕРАЦИИ")
+views:
+  - type: table
+    name: "Последние события"
+    limit: 50
+    order:
+      - file.name
+      - дата
+      - категория
+      - направление
+      - приоритет
+    groupBy:
+      property: категория
+      direction: ASC
+  - type: table
+    name: "Критические"
+    filters:
+      and:
+        - 'приоритет == "критический"'
+    order:
+      - file.name
+      - дата
+      - направление

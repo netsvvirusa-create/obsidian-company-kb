@@ -1,0 +1,26 @@
+filters:
+  and:
+    - file.inFolder("09-СТРАТЕГИЯ/Цели")
+    - 'статус == "активный"'
+formulas:
+  дней_до_дедлайна: 'if(дедлайн, (date(дедлайн) - today()).days, "")'
+  горит: 'if(дедлайн, (date(дедлайн) - today()).days < 30 && статус == "активный", false)'
+properties:
+  formula.дней_до_дедлайна:
+    displayName: "Дней до дедлайна"
+  formula.горит:
+    displayName: "Срочно"
+views:
+  - type: table
+    name: "Активные цели"
+    order:
+      - file.name
+      - горизонт
+      - направление
+      - formula.дней_до_дедлайна
+      - ответственный
+    groupBy:
+      property: горизонт
+      direction: ASC
+    summaries:
+      formula.дней_до_дедлайна: Min

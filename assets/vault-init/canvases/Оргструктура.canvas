@@ -1,0 +1,36 @@
+{
+  "nodes": [
+    {
+      "id": "ceo",
+      "type": "text",
+      "text": "# Генеральный директор\n[[Маса Ольга]]",
+      "x": 0, "y": 0, "width": 300, "height": 80, "color": "6"
+    },
+    {
+      "id": "group-tech",
+      "type": "group",
+      "label": "Техническое направление",
+      "x": -400, "y": 150, "width": 350, "height": 250
+    },
+    {
+      "id": "group-sales",
+      "type": "group",
+      "label": "Продажи",
+      "x": 200, "y": 150, "width": 350, "height": 250
+    }
+  ],
+  "edges": [
+    {
+      "id": "e-ceo-tech",
+      "fromNode": "ceo", "fromSide": "bottom",
+      "toNode": "group-tech", "toSide": "top",
+      "label": "руководит"
+    },
+    {
+      "id": "e-ceo-sales",
+      "fromNode": "ceo", "fromSide": "bottom",
+      "toNode": "group-sales", "toSide": "top",
+      "label": "руководит"
+    }
+  ]
+}

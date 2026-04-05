@@ -1,0 +1,20 @@
+filters:
+  and:
+    - file.inFolder("08-КАЛЕНДАРЬ")
+formulas:
+  день_недели: 'date(file.basename).format("dddd")'
+  размер: '(file.size / 5).round(0)'
+properties:
+  formula.день_недели:
+    displayName: "День"
+  formula.размер:
+    displayName: "~Слов"
+views:
+  - type: table
+    name: "Последние записи"
+    limit: 30
+    order:
+      - file.name
+      - formula.день_недели
+      - formula.размер
+      - file.mtime

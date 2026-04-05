@@ -1,0 +1,34 @@
+filters:
+  and:
+    - file.inFolder("05-КОНТАКТЫ")
+    - 'статус == "активный"'
+formulas:
+  обновлено: 'file.mtime.relative()'
+properties:
+  formula.обновлено:
+    displayName: "Обновлено"
+views:
+  - type: table
+    name: "По контрагентам"
+    order:
+      - file.name
+      - контрагент
+      - роль
+      - статус
+      - formula.обновлено
+    groupBy:
+      property: контрагент
+      direction: ASC
+  - type: cards
+    name: "Карточки"
+    order:
+      - file.name
+      - контрагент
+      - роль
+  - type: table
+    name: "Все контакты"
+    order:
+      - file.name
+      - контрагент
+      - роль
+      - статус
