@@ -216,6 +216,117 @@ def sample_contact_note(tmp_vault: Path) -> Path:
 
 
 @pytest.fixture
+def sample_payment_note(tmp_vault: Path) -> Path:
+    """Create a sample payment note in 10-ФИНАНСЫ."""
+    note = tmp_vault / "10-ФИНАНСЫ" / "2026-04-05 Платёж ООО Пример.md"
+    note.write_text(
+        '---\n'
+        'title: "2026-04-05 Платёж ООО Пример"\n'
+        'type: платёж\n'
+        'дата: 2026-04-05\n'
+        'контрагент: "[[ООО Пример]]"\n'
+        'договор: "[[Договор №001]]"\n'
+        'сумма: 50000\n'
+        'валюта: RUB\n'
+        'направление: исходящий\n'
+        'статус: ожидается\n'
+        'дата_оплаты_план: 2026-04-01\n'
+        'tags:\n'
+        '  - тип/платёж\n'
+        '  - статус/ожидается\n'
+        '---\n\n'
+        '# 2026-04-05 Платёж ООО Пример\n',
+        encoding="utf-8",
+    )
+    return note
+
+
+@pytest.fixture
+def sample_invoice_note(tmp_vault: Path) -> Path:
+    """Create a sample invoice note in 10-ФИНАНСЫ."""
+    note = tmp_vault / "10-ФИНАНСЫ" / "Счёт №001 от 2026-04-05.md"
+    note.write_text(
+        '---\n'
+        'title: "Счёт №001 от 2026-04-05"\n'
+        'type: счёт\n'
+        'номер: "001"\n'
+        'дата_выставления: 2026-04-05\n'
+        'дата_оплаты_план: 2026-04-20\n'
+        'контрагент: "[[ООО Пример]]"\n'
+        'договор: "[[Договор №001]]"\n'
+        'сумма: 150000\n'
+        'сумма_ндс: 25000\n'
+        'валюта: RUB\n'
+        'направление: исходящий\n'
+        'статус: выставлен\n'
+        'tags:\n'
+        '  - тип/счёт\n'
+        '  - статус/выставлен\n'
+        '---\n\n'
+        '# Счёт №001 от 2026-04-05\n',
+        encoding="utf-8",
+    )
+    return note
+
+
+@pytest.fixture
+def sample_budget_note(tmp_vault: Path) -> Path:
+    """Create a sample budget note in 10-ФИНАНСЫ."""
+    note = tmp_vault / "10-ФИНАНСЫ" / "Бюджет 2026-Q2.md"
+    note.write_text(
+        '---\n'
+        'title: "Бюджет 2026-Q2"\n'
+        'type: бюджет\n'
+        'период: "2026-Q2"\n'
+        'дата_создания: 2026-04-05\n'
+        'статус: активный\n'
+        'доходы_план: 500000\n'
+        'расходы_план: 300000\n'
+        'доходы_факт: 450000\n'
+        'расходы_факт: 280000\n'
+        'tags:\n'
+        '  - тип/бюджет\n'
+        '---\n\n'
+        '# Бюджет 2026-Q2\n',
+        encoding="utf-8",
+    )
+    return note
+
+
+@pytest.fixture
+def sample_daily_note(tmp_vault: Path) -> Path:
+    """Create a sample daily record."""
+    from datetime import date
+    today = date.today().isoformat()
+    note = tmp_vault / "08-КАЛЕНДАРЬ" / f"{today}.md"
+    note.write_text(
+        f'---\ntitle: "{today}"\ntype: дневная_запись\nдата: {today}\n'
+        f'tags:\n  - тип/календарь\n---\n\n# {today}\n\n'
+        '## Задачи\n\n- [ ] Тестовая задача\n\n'
+        '## На завтра / на контроле\n\n- [ ] Задача на завтра\n',
+        encoding="utf-8",
+    )
+    return note
+
+
+@pytest.fixture
+def sample_negotiation_today(tmp_vault: Path) -> Path:
+    """Create a negotiation note for today."""
+    from datetime import date
+    today = date.today().isoformat()
+    note = tmp_vault / "06-ПЕРЕГОВОРЫ" / f"{today} Тестовая встреча.md"
+    note.write_text(
+        f'---\ntitle: "Переговоры: Тест — {today}"\ntype: переговоры\n'
+        f'дата: {today}\nвремя: "14:00"\nформат: онлайн\n'
+        f'контрагент: "[[ООО Пример]]"\nтема: "Тестовая встреча"\n'
+        f'статус: запланирован\ntags:\n  - тип/переговоры\n---\n\n'
+        f'# Переговоры: Тест — {today}\n',
+        encoding="utf-8",
+    )
+    return note
+
+
+@pytest.fixture
 def contract_template_path() -> Path:
     """Path to the contract template .docx."""
     return FIXTURES_DIR / "contract_template.docx"

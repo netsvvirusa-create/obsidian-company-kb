@@ -1,0 +1,10 @@
+{
+  "nodes": [
+    {"id": "our-company", "type": "text", "text": "# Наша компания", "x": 0, "y": 0, "width": 300, "height": 80, "color": "6"},
+    {"id": "group-clients", "type": "group", "label": "Клиенты", "x": -450, "y": -200, "width": 400, "height": 250},
+    {"id": "group-suppliers", "type": "group", "label": "Поставщики", "x": 300, "y": -200, "width": 400, "height": 250},
+    {"id": "group-partners", "type": "group", "label": "Партнёры", "x": -450, "y": 150, "width": 400, "height": 250},
+    {"id": "group-contractors", "type": "group", "label": "Подрядчики", "x": 300, "y": 150, "width": 400, "height": 250}
+  ],
+  "edges": []
+}

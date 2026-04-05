@@ -12,6 +12,9 @@ digits (not as first character), underscores, hyphens, and `/` for hierarchy.
 #статус/отменён
 #статус/черновик
 #статус/на-согласовании
+#статус/оплачен
+#статус/просрочен
+#статус/выставлен
 ```
 
 ## Types
@@ -29,6 +32,11 @@ digits (not as first character), underscores, hyphens, and `/` for hierarchy.
 #тип/контакт
 #тип/компания
 #тип/календарь
+#тип/платёж
+#тип/счёт
+#тип/бюджет
+#тип/ретроспектива
+#тип/moc
 ```
 
 ## Priorities

@@ -1,0 +1,13 @@
+{
+  "nodes": [
+    {"id": "project-title", "type": "text", "text": "# Проект\nЗамените на ссылку на проект", "x": 0, "y": -100, "width": 400, "height": 80, "color": "6"},
+    {"id": "phase-1", "type": "text", "text": "## Фаза 1\nОписание", "x": -300, "y": 50, "width": 250, "height": 100, "color": "4"},
+    {"id": "phase-2", "type": "text", "text": "## Фаза 2\nОписание", "x": 0, "y": 50, "width": 250, "height": 100, "color": "4"},
+    {"id": "phase-3", "type": "text", "text": "## Фаза 3\nОписание", "x": 300, "y": 50, "width": 250, "height": 100, "color": "4"}
+  ],
+  "edges": [
+    {"id": "e-p-1", "fromNode": "project-title", "fromSide": "bottom", "toNode": "phase-1", "toSide": "top"},
+    {"id": "e-1-2", "fromNode": "phase-1", "fromSide": "right", "toNode": "phase-2", "toSide": "left", "label": "\u2192"},
+    {"id": "e-2-3", "fromNode": "phase-2", "fromSide": "right", "toNode": "phase-3", "toSide": "left", "label": "\u2192"}
+  ]
+}

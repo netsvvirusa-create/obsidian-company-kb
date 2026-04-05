@@ -1,0 +1,10 @@
+{
+  "nodes": [
+    {"id": "center-person", "type": "text", "text": "# Центральное лицо\nЗамените на ссылку", "x": 0, "y": 0, "width": 300, "height": 80, "color": "1"},
+    {"id": "group-work", "type": "group", "label": "Рабочие связи", "x": -400, "y": -200, "width": 350, "height": 250},
+    {"id": "group-personal", "type": "group", "label": "Личные связи", "x": 300, "y": -200, "width": 350, "height": 250},
+    {"id": "group-business", "type": "group", "label": "Деловые связи", "x": -400, "y": 150, "width": 350, "height": 250},
+    {"id": "group-other", "type": "group", "label": "Прочие связи", "x": 300, "y": 150, "width": 350, "height": 250}
+  ],
+  "edges": []
+}

@@ -54,6 +54,10 @@ appropriate template. Every note MUST have YAML frontmatter with `type` field.
 | цель | 09-СТРАТЕГИЯ/Цели/ | [TEMPLATES.md](references/TEMPLATES.md)#цель |
 | идея | 09-СТРАТЕГИЯ/Идеи/ | [TEMPLATES.md](references/TEMPLATES.md)#идея |
 | наша_компания | root | [TEMPLATES.md](references/TEMPLATES.md)#наша-компания |
+| платёж | 10-ФИНАНСЫ/ | [TEMPLATES.md](references/TEMPLATES.md)#платёж |
+| счёт | 10-ФИНАНСЫ/ | [TEMPLATES.md](references/TEMPLATES.md)#счёт |
+| бюджет | 10-ФИНАНСЫ/ | [TEMPLATES.md](references/TEMPLATES.md)#бюджет |
+| ретроспектива | 09-СТРАТЕГИЯ/Ретроспективы/ | [TEMPLATES.md](references/TEMPLATES.md)#ретроспектива |
 
 ### 3. Obsidian Flavored Markdown rules
 
@@ -133,15 +137,25 @@ See [CONTRACT_VARS.md](references/CONTRACT_VARS.md) for variable registry and
 
 ### 9. Dashboards (.base)
 
-9 dashboards in `11-БАЗЫ/`. See [BASES.md](references/BASES.md):
+13 dashboards in `11-БАЗЫ/`. See [BASES.md](references/BASES.md):
 - Активные договоры, Контрагенты, Контактные лица, Сотрудники
 - Переговоры, Стратегические цели, Операционные события
 - Календарь, Связи между людьми
+- Финансы, Проекты, Ретроспективы, Архив
 
 ### 10. Visual maps (.canvas)
 
 See [CANVAS.md](references/CANVAS.md) for templates:
 - Оргструктура, Участники договора, Карта связей, Стратегическая карта
+- Дорожная карта проекта, Карта контрагентов
+
+Generate canvases from vault data:
+```bash
+python scripts/generate_canvas.py --vault PATH --type contract-participants --target "Договор №001"
+python scripts/generate_canvas.py --vault PATH --type person-relationships --target "Иванов Иван"
+python scripts/generate_canvas.py --vault PATH --type project-roadmap --target "Проект"
+python scripts/generate_canvas.py --vault PATH --type counterparty-map
+```
 
 ### 11. Utility scripts
 
@@ -149,11 +163,22 @@ See [CANVAS.md](references/CANVAS.md) for templates:
 python scripts/validate_vault.py --vault PATH
 python scripts/import_csv.py --vault PATH --type контрагент --file data.csv
 python scripts/import_vcard.py --vault PATH --counterparty "ООО Пример" --file contacts.vcf
+python scripts/import_meeting.py --vault PATH --file meeting.txt [--counterparty NAME] [--format auto]
+python scripts/quick_capture.py --vault PATH --type идея --text "Описание идеи"
 python scripts/generate_report.py --vault PATH --type expiring-contracts --days 30
+python scripts/generate_report.py --vault PATH --type overdue-payments
+python scripts/generate_report.py --vault PATH --type financial-summary --period 2026-04
 python scripts/audit_links.py --vault PATH [--fix]
 python scripts/bulk_status_update.py --vault PATH --folder 02-ДОГОВОРЫ --status завершён
 python scripts/relationship_sync.py --vault PATH [--fix] [--dry-run]
 python scripts/grammar_check.py --file PATH [--verbose]
+python scripts/daily_operations.py --vault PATH create-daily [--date YYYY-MM-DD]
+python scripts/daily_operations.py --vault PATH morning-briefing [--days 7]
+python scripts/daily_operations.py --vault PATH check-overdue
+python scripts/periodic_synthesis.py --vault PATH --type weekly [--date YYYY-MM-DD]
+python scripts/sync_moc.py --vault PATH [--fix] [--dry-run]
+python scripts/archive_manager.py --vault PATH scan
+python scripts/archive_manager.py --vault PATH archive [--folder FOLDER] [--dry-run]
 ```
 
 ### 12. Agent behavior
@@ -165,6 +190,11 @@ python scripts/grammar_check.py --file PATH [--verbose]
 5. After response suggest: more notes/contacts, .base updates, .canvas, tasks
 6. Extract data from unstructured text (protocols, emails, business cards)
 7. On first use suggest creating full set of .base files and org chart .canvas
+8. Import meeting notes from text, audio transcription, or .docx files
+9. Quick capture ideas from single-line descriptions
+10. Generate morning briefings and periodic retrospectives
+11. Auto-sync MOC index notes when vault content changes
+12. Manage archive: scan candidates, move completed items, generate reports
 
 ### 13. Dataview migration
 

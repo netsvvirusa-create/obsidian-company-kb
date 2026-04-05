@@ -366,3 +366,65 @@ views:
       - formula.тип_лица
       - связи
 ```
+
+---
+
+## Финансы
+
+File: `11-БАЗЫ/Финансы.base`
+
+```yaml
+filters:
+  and:
+    - file.inFolder("10-ФИНАНСЫ")
+formulas:
+  просрочен: 'if(дата_оплаты_план, date(дата_оплаты_план) < today() && статус != "оплачен", false)'
+  дней_просрочки: 'if(дата_оплаты_план, if(date(дата_оплаты_план) < today() && статус != "оплачен", (today() - date(дата_оплаты_план)).days, ""), "")'
+properties:
+  formula.просрочен:
+    displayName: "Просрочен"
+  formula.дней_просрочки:
+    displayName: "Дней просрочки"
+views:
+  - type: table
+    name: "Все операции"
+    order:
+      - file.name
+      - type
+      - контрагент
+      - договор
+      - сумма
+      - направление
+      - статус
+      - formula.просрочен
+    groupBy:
+      property: type
+      direction: ASC
+    summaries:
+      сумма: Sum
+  - type: table
+    name: "Ожидают оплаты"
+    filters:
+      and:
+        - 'статус == "ожидается" || статус == "выставлен"'
+    order:
+      - file.name
+      - контрагент
+      - сумма
+      - дата_оплаты_план
+      - formula.дней_просрочки
+    summaries:
+      сумма: Sum
+  - type: table
+    name: "По контрагентам"
+    order:
+      - file.name
+      - сумма
+      - направление
+      - статус
+    groupBy:
+      property: контрагент
+      direction: ASC
+    summaries:
+      сумма: Sum
+```

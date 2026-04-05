@@ -1,0 +1,31 @@
+filters:
+  and:
+    - file.inFolder("99-АРХИВ")
+formulas:
+  исходная_папка: 'file.path.split("/")[1] ?? "неизвестно"'
+  дата_архивации: 'file.mtime.relative()'
+properties:
+  formula.исходная_папка:
+    displayName: "Исходная папка"
+  formula.дата_архивации:
+    displayName: "Архивировано"
+views:
+  - type: table
+    name: "Все архивные"
+    order:
+      - file.name
+      - type
+      - статус
+      - formula.исходная_папка
+      - formula.дата_архивации
+    groupBy:
+      property: formula.исходная_папка
+      direction: ASC
+  - type: table
+    name: "Последние архивации"
+    limit: 30
+    order:
+      - file.name
+      - type
+      - formula.исходная_папка
+      - file.mtime

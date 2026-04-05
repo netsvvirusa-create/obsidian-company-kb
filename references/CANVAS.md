@@ -198,3 +198,32 @@ Goals tree: company vision at top, strategic goals below, projects at bottom.
   ]
 }
 ```
+
+---
+
+## Дорожная карта проекта
+
+File: `12-КАНВАСЫ/Дорожная карта {Проект}.canvas`
+
+Timeline layout: project at top, phases left-to-right.
+Generate with `scripts/generate_canvas.py --type project-roadmap`.
+
+---
+
+## Карта контрагентов
+
+File: `12-КАНВАСЫ/Карта контрагентов.canvas`
+
+Our company at center, counterparties grouped by category.
+Generate with `scripts/generate_canvas.py --type counterparty-map`.
+
+---
+
+## Canvas generation
+
+```bash
+python scripts/generate_canvas.py --vault PATH --type contract-participants --target "Договор №001"
+python scripts/generate_canvas.py --vault PATH --type person-relationships --target "Иванов Иван"
+python scripts/generate_canvas.py --vault PATH --type project-roadmap --target "Проект"
+python scripts/generate_canvas.py --vault PATH --type counterparty-map
+```

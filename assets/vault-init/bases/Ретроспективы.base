@@ -1,0 +1,32 @@
+filters:
+  and:
+    - file.inFolder("09-СТРАТЕГИЯ/Ретроспективы")
+views:
+  - type: table
+    name: "Все ретроспективы"
+    order:
+      - file.name
+      - период
+      - дата_начала
+      - дата_окончания
+      - статус
+    groupBy:
+      property: период
+      direction: ASC
+  - type: table
+    name: "Еженедельные"
+    filters:
+      and:
+        - 'период == "неделя"'
+    order:
+      - file.name
+      - дата_начала
+      - дата_окончания
+  - type: table
+    name: "Ежемесячные"
+    filters:
+      and:
+        - 'период == "месяц"'
+    order:
+      - file.name
+      - дата_начала

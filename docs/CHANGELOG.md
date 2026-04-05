@@ -4,6 +4,25 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.1.0] - 2026-04-05
+
+### Added
+
+- **Financial module** (10-ФИНАНСЫ): templates for платёж, счёт, бюджет; Финансы.base dashboard; 3 new report types (overdue-payments, financial-summary, budget-variance)
+- **Meeting import** (`import_meeting.py`): import from plain text, audio transcription, .docx protocols → type:переговоры notes with auto-extraction of participants, decisions, tasks
+- **Quick capture** (`quick_capture.py`): fast creation of ideas, events, tasks from single-line descriptions
+- **Daily operations** (`daily_operations.py`): auto-create daily records, morning briefings, overdue checks
+- **Periodic synthesis** (`periodic_synthesis.py`): weekly and monthly retrospective generation
+- **MOC synchronization** (`sync_moc.py`): auto-populate and update _MOC.md index notes
+- **Canvas generator** (`generate_canvas.py`): auto-generate canvases from vault data (contract participants, person relationships, project roadmaps, counterparty maps)
+- **Archive manager** (`archive_manager.py`): scan candidates, archive completed items, generate archive reports
+- **4 new .canvas templates**: Участники договора, Карта связей, Дорожная карта проекта, Карта контрагентов
+- **4 new .base dashboards**: Финансы, Проекты, Ретроспективы, Архив
+- **Retrospective template** (type: ретроспектива)
+- **New tags**: `#тип/платёж`, `#тип/счёт`, `#тип/бюджет`, `#тип/ретроспектива`, `#статус/оплачен`, `#статус/просрочен`, `#статус/выставлен`
+
+---
+
 ## [1.0.0] - 2026-04-05
 
 ### Added

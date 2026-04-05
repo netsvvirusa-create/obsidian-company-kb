@@ -1,0 +1,47 @@
+filters:
+  and:
+    - file.inFolder("03-ПРОЕКТЫ")
+formulas:
+  дней_до_окончания: 'if(дата_окончания_план, (date(дата_окончания_план) - today()).days, "")'
+  просрочен: 'if(дата_окончания_план, date(дата_окончания_план) < today() && статус == "активный", false)'
+properties:
+  formula.дней_до_окончания:
+    displayName: "Дней до окончания"
+  formula.просрочен:
+    displayName: "Просрочен"
+views:
+  - type: table
+    name: "Активные проекты"
+    filters:
+      and:
+        - 'статус == "активный"'
+    order:
+      - file.name
+      - клиент
+      - руководитель
+      - дата_начала
+      - formula.дней_до_окончания
+      - бюджет
+    groupBy:
+      property: клиент
+      direction: ASC
+    summaries:
+      бюджет: Sum
+  - type: table
+    name: "Все проекты"
+    order:
+      - file.name
+      - клиент
+      - статус
+      - руководитель
+      - бюджет
+    groupBy:
+      property: статус
+      direction: ASC
+  - type: cards
+    name: "Карточки"
+    order:
+      - file.name
+      - клиент
+      - статус
+      - руководитель

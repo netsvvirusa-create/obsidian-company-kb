@@ -1,0 +1,11 @@
+{
+  "nodes": [
+    {"id": "contract-placeholder", "type": "text", "text": "# Договор\nЗамените на ссылку на договор", "x": 0, "y": 0, "width": 300, "height": 80, "color": "3"},
+    {"id": "group-our", "type": "group", "label": "Наша сторона", "x": -400, "y": 150, "width": 350, "height": 200},
+    {"id": "group-their", "type": "group", "label": "Сторона контрагента", "x": 200, "y": 150, "width": 350, "height": 200}
+  ],
+  "edges": [
+    {"id": "e-contract-our", "fromNode": "contract-placeholder", "fromSide": "left", "toNode": "group-our", "toSide": "top", "label": "Наша сторона"},
+    {"id": "e-contract-their", "fromNode": "contract-placeholder", "fromSide": "right", "toNode": "group-their", "toSide": "top", "label": "Контрагент"}
+  ]
+}

@@ -41,7 +41,7 @@
 | 07-ОПЕРАЦИИ | Operational events, decisions | событие |
 | 08-КАЛЕНДАРЬ | Daily journal entries | дневная_запись |
 | 09-СТРАТЕГИЯ | Goals, ideas, retrospectives | цель, идея |
-| 10-ФИНАНСЫ | Financial records | — |
+| 10-ФИНАНСЫ | Financial records | платёж, счёт, бюджет |
 | 11-БАЗЫ | .base dashboard files | — |
 | 12-КАНВАСЫ | .canvas visual maps | — |
 | 13-ШАБЛОНЫ | Note templates | — |
