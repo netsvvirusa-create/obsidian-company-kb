@@ -2,6 +2,13 @@
 
 Test strategy, execution instructions, and fixture descriptions for obsidian-company-kb.
 
+## Current status
+
+- **Tests passed:** 598
+- **Code coverage:** 79%
+- **Test files:** 23
+- **Scripts covered:** 19
+
 ## Test strategy
 
 Testing is organized into three layers:
@@ -99,7 +106,7 @@ fail_under = 80
 make lint
 ```
 
-Runs ruff check and format verification on `scripts/` and `tests/`.
+Runs ruff check and format verification on `scripts/` (19 scripts) and `tests/` (23 test files).
 
 ### Security audit
 
@@ -132,6 +139,14 @@ Runs lint, test, coverage, and audit in sequence.
 | `tests/test_validate_vault.py` | Vault validation logic |
 | `tests/test_init_vault.py` | Vault initialization script |
 | `tests/test_import_csv.py` | CSV import functionality |
+| `tests/test_financial.py` | Financial module (payments, invoices, budgets) |
+| `tests/test_import_meeting.py` | Meeting import functionality |
+| `tests/test_quick_capture.py` | Quick capture functionality |
+| `tests/test_daily_operations.py` | Daily operations (briefings, overdue checks) |
+| `tests/test_periodic_synthesis.py` | Periodic synthesis (weekly/monthly retrospectives) |
+| `tests/test_sync_moc.py` | MOC index synchronization |
+| `tests/test_generate_canvas.py` | Canvas generation from vault data |
+| `tests/test_archive_manager.py` | Archive management (scan, archive, reports) |
 
 ## Fixture descriptions
 

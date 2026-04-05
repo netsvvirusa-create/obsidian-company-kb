@@ -200,6 +200,163 @@ bash scripts/init_vault.sh /path/to/vault
 
 Single positional argument: the vault directory path.
 
+### daily_operations.py
+
+```
+python scripts/daily_operations.py --vault PATH [-v] COMMAND [OPTIONS]
+```
+
+| Argument | Required | Type | Description |
+|----------|----------|------|-------------|
+| `--vault` | yes | `Path` | Path to Obsidian vault root |
+| `-v`, `--verbose` | no | `bool` (default `false`) | Verbose output (DEBUG level) |
+
+**Subcommands:**
+
+**`create-daily`** -- Create a daily record from template.
+
+| Argument | Required | Type | Description |
+|----------|----------|------|-------------|
+| `--date` | no | `str` (default: today) | Date in YYYY-MM-DD format |
+
+**`morning-briefing`** -- Generate morning briefing (Markdown to stdout).
+
+| Argument | Required | Type | Description |
+|----------|----------|------|-------------|
+| `--days` | no | `int` (default `7`) | Horizon in days for expiring contracts |
+
+**`check-overdue`** -- Check overdue tasks, contracts, and payments (JSON to stdout). No additional arguments.
+
+**Output:** `create-daily` writes a file; `morning-briefing` outputs Markdown to stdout; `check-overdue` outputs JSON to stdout with keys `overdue_tasks`, `expiring_contracts`, `overdue_payments`.
+
+### periodic_synthesis.py
+
+```
+python scripts/periodic_synthesis.py --vault PATH --type TYPE
+                                     [--date DATE] [--dry-run] [-v]
+```
+
+| Argument | Required | Type | Description |
+|----------|----------|------|-------------|
+| `--vault` | yes | `Path` | Path to Obsidian vault root |
+| `--type` | yes | `str` choices: `weekly`, `monthly` | Retrospective type |
+| `--date` | no | `str` (default: today) | Date within target period (YYYY-MM-DD) |
+| `--dry-run` | no | `bool` (default `false`) | Print content without creating file |
+| `-v`, `--verbose` | no | `bool` (default `false`) | Verbose output (DEBUG level) |
+
+**Output:** Creates a retrospective file in `09-СТРАТЕГИЯ/Ретроспективы/`. With `--dry-run`, prints Markdown to stdout.
+
+### sync_moc.py
+
+```
+python scripts/sync_moc.py --vault PATH [--folder FOLDER]
+                            [--dry-run] [--fix] [-v]
+```
+
+| Argument | Required | Type | Description |
+|----------|----------|------|-------------|
+| `--vault` | yes | `Path` | Path to Obsidian vault root |
+| `--folder` | no | `str` (default: all folders) | Process only the specified folder |
+| `--dry-run` | no | `bool` (default `false`) | Report only, no changes |
+| `--fix` | no | `bool` (default `false`) | Apply fixes to `_MOC.md` files |
+| `-v`, `--verbose` | no | `bool` (default `false`) | Verbose output (DEBUG level) |
+
+**Output JSON:**
+```json
+{
+  "folders_checked": 10,
+  "notes_indexed": 42,
+  "updates_needed": 3,
+  "updates_applied": 3
+}
+```
+
+### generate_canvas.py
+
+```
+python scripts/generate_canvas.py --vault PATH --type TYPE
+                                  [--target NAME] [--output PATH] [-v]
+```
+
+| Argument | Required | Type | Description |
+|----------|----------|------|-------------|
+| `--vault` | yes | `Path` | Path to Obsidian vault root |
+| `--type` | yes | `str` choices: `contract-participants`, `person-relationships`, `project-roadmap`, `counterparty-map` | Canvas type |
+| `--target` | conditional | `str` (default `""`) | Target object name (required for all types except `counterparty-map`) |
+| `--output` | no | `Path` (default: `12-КАНВАСЫ/`) | Output path for `.canvas` file |
+| `-v`, `--verbose` | no | `bool` (default `false`) | Verbose output (DEBUG level) |
+
+**Output:** Creates a `.canvas` JSON file in `12-КАНВАСЫ/` (or custom path).
+
+### archive_manager.py
+
+```
+python scripts/archive_manager.py --vault PATH [-v] COMMAND [OPTIONS]
+```
+
+| Argument | Required | Type | Description |
+|----------|----------|------|-------------|
+| `--vault` | yes | `Path` | Path to Obsidian vault root |
+| `-v`, `--verbose` | no | `bool` (default `false`) | Verbose output (DEBUG level) |
+
+**Subcommands:**
+
+**`scan`** -- Find archive candidates. No additional arguments. Outputs JSON array.
+
+**`archive`** -- Move notes to archive.
+
+| Argument | Required | Type | Description |
+|----------|----------|------|-------------|
+| `--folder` | no | `str` (default: all) | Folder to scan (e.g. `02-ДОГОВОРЫ`) |
+| `--filter` | no | `str` | Filter expression `key:value` (e.g. `status:завершён`) |
+| `--days-old` | no | `int` | Minimum file age in days for archiving |
+| `--dry-run` | no | `bool` (default `false`) | Report only, no actual move |
+
+**`report`** -- Generate archive report (Markdown to stdout). No additional arguments.
+
+**Output:** `scan` and `archive` output JSON to stdout; `report` outputs Markdown.
+
+### import_meeting.py
+
+```
+python scripts/import_meeting.py --vault PATH --file FILE
+                                 [--counterparty NAME] [--date DATE]
+                                 [--format FORMAT] [--dry-run] [-v]
+```
+
+| Argument | Required | Type | Description |
+|----------|----------|------|-------------|
+| `--vault` | yes | `Path` | Path to Obsidian vault root |
+| `--file` | yes | `Path` | Path to meeting file (.txt, .md, .docx) |
+| `--counterparty` | no | `str` (default `""`) | Counterparty name for linking |
+| `--date` | no | `str` (default: extracted from text or today) | Meeting date YYYY-MM-DD |
+| `--format` | no | `str` choices: `auto`, `text`, `transcript`, `docx` (default `auto`) | Input file format |
+| `--dry-run` | no | `bool` (default `false`) | Show what would be created without writing |
+| `-v`, `--verbose` | no | `bool` (default `false`) | Verbose output (DEBUG level) |
+
+**Behavior:** Creates a meeting note in `06-ПЕРЕГОВОРЫ/` and contact cards in `05-КОНТАКТЫ/` for new participants. Auto-extracts participants (FIO patterns), decisions (keywords: решено, договорились, согласовано, утверждено), and tasks (keywords: поручить, выполнить, сделать, подготовить).
+
+### quick_capture.py
+
+```
+python scripts/quick_capture.py --vault PATH --type TYPE --text TEXT
+                                [--direction DIR] [--priority PRI]
+                                [--link LINK] [--author AUTHOR] [-v]
+```
+
+| Argument | Required | Type | Description |
+|----------|----------|------|-------------|
+| `--vault` | yes | `Path` | Path to Obsidian vault root |
+| `--type` | yes | `str` choices: `идея`, `событие`, `задача` | Note type |
+| `--text` | yes | `str` | Note text / description |
+| `--direction` | no | `str` (default `""`) | Direction (for ideas and events) |
+| `--priority` | no | `str` (default `""`) | Priority (for events; defaults to `средний` when empty) |
+| `--link` | no | `str` (default `""`) | Related note (for ideas) |
+| `--author` | no | `str` (default `""`) | Author (for ideas) |
+| `-v`, `--verbose` | no | `bool` (default `false`) | Verbose output (DEBUG level) |
+
+**Behavior:** `идея` creates a note in `09-СТРАТЕГИЯ/Идеи/`; `событие` creates a note in `07-ОПЕРАЦИИ/`; `задача` appends a task to today's daily record in `08-КАЛЕНДАРЬ/` (creates the record if it does not exist).
+
 ---
 
 ## Data formats
@@ -319,3 +476,98 @@ Variables are resolved from three frontmatter sources:
 | Specification data (`спецификации[N]`) | `дата`, `услуги[i].*`, calculated totals | 5+ |
 
 Fields ending with `_рп` store values in genitive case (Russian "родительный падеж") as required by legal document phrasing.
+
+### Financial note frontmatter
+
+**Платёж** (`type: платёж`):
+
+```yaml
+---
+title: "2026-04-05 Платёж ООО Пример"
+type: платёж
+дата: 2026-04-05
+контрагент: "[[ООО Пример]]"
+договор: "[[Договор №001]]"
+сумма: 0
+валюта: RUB
+направление: исходящий       # исходящий | входящий
+статус: ожидается             # ожидается | оплачен | просрочен | отменён
+номер_счёта: ""
+назначение: ""
+ответственный: "[[Иванов Иван]]"
+tags:
+  - тип/платёж
+  - статус/ожидается
+---
+```
+
+**Счёт** (`type: счёт`):
+
+```yaml
+---
+title: "Счёт №001 от 2026-04-05"
+type: счёт
+номер: "001"
+дата_выставления: 2026-04-05
+дата_оплаты_план: 2026-04-20
+контрагент: "[[ООО Пример]]"
+договор: "[[Договор №001]]"
+сумма: 0
+сумма_ндс: 0
+валюта: RUB
+направление: исходящий
+статус: выставлен              # выставлен | оплачен | просрочен | отменён
+tags:
+  - тип/счёт
+  - статус/выставлен
+---
+```
+
+**Бюджет** (`type: бюджет`):
+
+```yaml
+---
+title: "Бюджет 2026-Q2"
+type: бюджет
+период: "2026-Q2"
+дата_создания: 2026-04-05
+статус: черновик               # черновик | утверждён | закрыт
+доходы_план: 0
+расходы_план: 0
+доходы_факт: 0
+расходы_факт: 0
+ответственный: "[[Иванов Иван]]"
+tags:
+  - тип/бюджет
+  - статус/черновик
+---
+```
+
+### Retrospective note frontmatter
+
+```yaml
+---
+title: "Ретроспектива: Неделя 2026-04-05"
+type: ретроспектива
+период: неделя                 # неделя | месяц
+дата_начала: 2026-04-05
+дата_окончания: 2026-04-11
+tags:
+  - тип/ретроспектива
+---
+```
+
+Sections: `Выполненные задачи`, `Проведённые встречи`, `Принятые решения и события`, `Открытые вопросы`. Monthly retrospectives additionally include `Активность по проектам` and `Активность по договорам`.
+
+### Canvas JSON format
+
+Canvas files (`.canvas`) follow the JSON Canvas specification. See the `.canvas JSON` section above for the full node/edge schema. The `generate_canvas.py` script produces four canvas types:
+
+| Type | Description | Root node |
+|------|-------------|-----------|
+| `contract-participants` | Both sides of a contract with signers and contacts | Contract note |
+| `person-relationships` | All relationships for a person (employee or contact) | Person note |
+| `project-roadmap` | Project milestones and timeline | Project note |
+| `counterparty-map` | All counterparties grouped by category | Company note |
+
+Node colors: `"1"` (red), `"2"` (orange), `"3"` (yellow), `"4"` (green), `"5"` (cyan), `"6"` (purple). Groups use `type: "group"` with a `label` field.

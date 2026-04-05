@@ -62,7 +62,49 @@ All file operations are restricted to the vault directory:
 | Write .docx files | `vault/14-ВЛОЖЕНИЯ/Документы/` or user-specified path | generate_contract, generate_specification |
 | Read CSV/VCF | User-specified path (read-only) | import_csv, import_vcard |
 | Create directories | Within vault only | init_vault.sh, import scripts |
-| Delete/move files | `vault/{folder}/ -> vault/99-АРХИВ/` | bulk_status_update |
+| Delete/move files | `vault/{folder}/ -> vault/99-АРХИВ/` | bulk_status_update, archive_manager |
+| Read meeting files | User-specified path (read-only) | import_meeting |
+| Write .canvas files | `vault/**/*.canvas` | generate_canvas |
+| Create notes (quick) | `vault/{folder}/*.md` | quick_capture |
+| Read/write daily notes | `vault/08-КАЛЕНДАРЬ/*.md` | daily_operations |
+| Read/write synthesis notes | `vault/09-СТРАТЕГИЯ/**/*.md` | periodic_synthesis |
+| Read/write MOC notes | `vault/**/*MOC*.md` | sync_moc |
+
+## Security notes for new scripts
+
+### import_meeting.py
+
+- File reading only -- reads meeting text/docx files, no network access
+- Path validation ensures input files exist and are readable
+- Output notes are created within the vault directory only
+- Uses `yaml.safe_load()` for any YAML parsing
+
+### generate_canvas.py
+
+- Generates JSON Canvas (.canvas) files within the vault only
+- No external file access or network communication
+- Output paths are validated to remain within vault boundaries
+
+### archive_manager.py
+
+- Moves files within the vault only (from working folders to `99-АРХИВ/`)
+- Path traversal protection -- all source and destination paths are resolved within vault
+- Does not delete files, only relocates them
+- Supports `--dry-run` for previewing changes
+
+### daily_operations.py, periodic_synthesis.py, sync_moc.py
+
+- Vault-local operations only -- read and write .md files within the vault
+- No network access, no external file I/O
+- All paths are resolved relative to the vault root
+- Use `yaml.safe_load()` for frontmatter parsing
+
+### quick_capture.py
+
+- Creates files within the vault only
+- Filename sanitization via `_safe_filename()` -- strips characters that could enable path traversal
+- Input text is treated as plain data, not evaluated or executed
+- Note type is validated against the allowed type list
 
 ## Input validation
 

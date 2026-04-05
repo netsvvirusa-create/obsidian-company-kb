@@ -6,17 +6,24 @@ Built on the [Agent Skills specification](https://agentskills.io).
 
 ## Features
 
-- **11 note types** -- counterparties, contracts, projects, employees, contacts, negotiations, events, daily journal, goals, ideas, company card
-- **9 `.base` dashboards** -- active contracts, counterparties, contacts, employees, negotiations, strategic goals, operational events, calendar, people relationships
-- **4 `.canvas` maps** -- org chart, contract participants, relationship map, strategic map
+- **15 note types** (контрагент, контакт, сотрудник, договор, проект, переговоры, событие, дневная_запись, цель, идея, наша_компания, платёж, счёт, бюджет, ретроспектива)
+- **13 `.base` dashboards** -- active contracts, counterparties, contacts, employees, negotiations, strategic goals, operational events, calendar, people relationships, payments, invoices, budgets, retrospectives
+- **6 `.canvas` maps** -- org chart, contract participants, relationship map, strategic map, project roadmap, counterparty map
 - **`.docx` generation** -- contracts and specifications from .docx templates with `{{VAR|ID|default}}` syntax and nested variable resolution
 - **Grammar check** -- Russian genitive case validation for legal documents using pymorphy3
 - **CSV import** -- bulk import of counterparties, contacts, and employees from CSV files with auto-column detection
 - **vCard import** -- import contacts from .vcf files with automatic counterparty card linking
+- **Meeting import** -- import meetings from text, transcription (Whisper/Otter), or .docx files with automatic participant, decision, and task extraction
+- **Quick capture** -- rapid creation of ideas, events, and tasks from a single line of text
+- **Daily operations** -- daily record creation, morning briefings, overdue task/contract/payment checks
+- **Retrospectives** -- weekly and monthly retrospective synthesis from vault activity
+- **MOC index sync** -- automatic population and synchronization of Map of Content index notes
+- **Canvas generation** -- generate .canvas files from vault data (contract participants, person relationships, project roadmaps, counterparty maps)
+- **Archive management** -- archive scanning with auto-rules, note archival with frontmatter updates, archive reporting
 - **Vault validation** -- frontmatter checks, tag taxonomy enforcement, duplicate detection, broken link audit
 - **Bidirectional relationships** -- automatic mirrored relationship sync between people cards
 - **Bulk operations** -- mass status updates with optional archival
-- **Reports** -- expiring contracts, counterparty history, employee activity
+- **Reports** -- expiring contracts, counterparty history, employee activity, 3 new financial report types
 
 ## Installation
 
@@ -58,7 +65,7 @@ This skill depends on the following skills from [kepano/obsidian-skills](https:/
 bash scripts/init_vault.sh /path/to/vault
 ```
 
-Creates 15 folders, 9 `.base` dashboards, 4 `.canvas` maps, and MOC index notes.
+Creates 15 folders, 13 `.base` dashboards, 6 `.canvas` maps, and MOC index notes.
 
 ### 2. Create company note
 
@@ -90,6 +97,17 @@ python scripts/generate_specification.py --vault /path/to/vault --contract "До
 | `bulk_status_update.py` | Mass-update status field with optional archival to `99-АРХИВ/` |
 | `relationship_sync.py` | Check and fix bidirectional relationship links |
 | `grammar_check.py` | Check Russian grammar in .docx legal documents |
+| `daily_operations.py` | Daily records, morning briefings, overdue checks |
+| `periodic_synthesis.py` | Weekly/monthly retrospective generation |
+| `sync_moc.py` | MOC index auto-population and sync |
+| `generate_canvas.py` | Canvas generation from vault data |
+| `archive_manager.py` | Archive scanning, archival, reporting |
+| `import_meeting.py` | Meeting import from text/transcript/.docx |
+| `quick_capture.py` | Quick idea/event/task capture |
+
+## Test coverage
+
+598 tests, 79% coverage.
 
 ## Project structure
 

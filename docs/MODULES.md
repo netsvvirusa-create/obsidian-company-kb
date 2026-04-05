@@ -264,3 +264,180 @@ python scripts/grammar_check.py --file PATH [--verbose]
 2. "на основании [document]" -- genitive case required
 3. "именуемое/ый/ая" -- must agree with legal entity type (ООО = neuter, ИП = masculine)
 4. "действующего/ей" -- must agree with signatory gender (detected by patronymic ending)
+
+---
+
+## daily_operations.py
+
+**Purpose:** Daily vault operations: create daily records from template, generate morning briefings, check overdue tasks/contracts/payments.
+
+**CLI:**
+```bash
+python scripts/daily_operations.py --vault PATH [-v] create-daily [--date YYYY-MM-DD]
+python scripts/daily_operations.py --vault PATH [-v] morning-briefing [--days 7]
+python scripts/daily_operations.py --vault PATH [-v] check-overdue
+```
+
+**Dependencies:** none (stdlib only)
+
+**Key functions:**
+- `parse_frontmatter(text)` -- extracts YAML frontmatter from .md file
+- `read_notes(vault, folder)` -- reads all .md files from a vault folder, returns (path, frontmatter, text) tuples
+- `cmd_create_daily(vault, target_date)` -- creates a daily record from template in `08-КАЛЕНДАРЬ/`, pulls meetings from `06-ПЕРЕГОВОРЫ/` and carry-over tasks from yesterday
+- `cmd_morning_briefing(vault, days)` -- generates Markdown morning briefing with overdue tasks, today's meetings, expiring contracts, and recent events
+- `cmd_check_overdue(vault)` -- checks overdue tasks, expiring/overdue contracts, and overdue payments; returns JSON with `overdue_tasks`, `expiring_contracts`, `overdue_payments`
+
+**Output:** `create-daily` writes file to `08-КАЛЕНДАРЬ/`; `morning-briefing` outputs Markdown to stdout; `check-overdue` outputs JSON to stdout
+
+---
+
+## periodic_synthesis.py
+
+**Purpose:** Generate weekly and monthly retrospectives by aggregating data from daily records, negotiations, operations, projects, and contracts.
+
+**CLI:**
+```bash
+python scripts/periodic_synthesis.py --vault PATH --type weekly [--date YYYY-MM-DD] [--dry-run] [-v]
+python scripts/periodic_synthesis.py --vault PATH --type monthly [--date YYYY-MM-DD] [--dry-run] [-v]
+```
+
+**Dependencies:** none (stdlib only)
+
+**Key functions:**
+- `generate_weekly(vault, ref_date)` -- generates weekly retrospective (completed tasks, meetings, operations, open questions) for the week containing `ref_date`
+- `generate_monthly(vault, ref_date)` -- generates monthly retrospective with additional project and contract activity sections
+- `_collect_daily_notes(vault, start, end)` -- collects daily records for a date range
+- `_collect_meetings(vault, start, end)` -- collects negotiations for a date range
+- `_collect_operations(vault, start, end)` -- collects operational events for a date range
+- `_collect_contract_activity(vault, start, end)` -- collects signed/expiring contracts for a date range
+
+**Output:** Retrospective .md file in `09-СТРАТЕГИЯ/Ретроспективы/` (or stdout with `--dry-run`)
+
+---
+
+## sync_moc.py
+
+**Purpose:** Synchronize MOC (Map of Content) index notes with actual folder contents, detecting new and removed notes.
+
+**CLI:**
+```bash
+python scripts/sync_moc.py --vault PATH [--folder FOLDER] [--fix] [--dry-run] [-v]
+```
+
+**Dependencies:** none (stdlib only)
+
+**Key functions:**
+- `sync_moc(vault, folder_filter, dry_run, fix)` -- main function: scans folders with `_MOC.md`, compares existing links to actual notes, optionally updates
+- `_extract_existing_links(moc_text)` -- extracts wikilinks from the `## Содержимое` section of a MOC file
+- `_scan_folder_notes(folder)` -- scans .md files in a folder, returns (stem, title, status) tuples
+- `_group_by_status(notes)` -- groups notes into "Активные" and "Завершённые" categories
+- `_build_moc_content(folder_name, notes)` -- builds full _MOC.md content from scratch
+- `_update_moc_section(existing_text, folder_name, notes)` -- updates only the `## Содержимое` section in an existing MOC
+
+**Output:** JSON with `folders_checked`, `notes_indexed`, `updates_needed`, `updates_applied` to stdout
+
+---
+
+## generate_canvas.py
+
+**Purpose:** Generate `.canvas` files from vault data with automatic node layout (radial, tree, timeline).
+
+**CLI:**
+```bash
+python scripts/generate_canvas.py --vault PATH --type contract-participants --target "Договор №001" [--output PATH] [-v]
+python scripts/generate_canvas.py --vault PATH --type person-relationships --target "Иванов Иван" [--output PATH] [-v]
+python scripts/generate_canvas.py --vault PATH --type project-roadmap --target "Проект Альфа" [--output PATH] [-v]
+python scripts/generate_canvas.py --vault PATH --type counterparty-map [--output PATH] [-v]
+```
+
+**Dependencies:** none (stdlib only)
+
+**Key functions:**
+- `generate_contract_participants(vault, target, output)` -- generates canvas with our side and counterparty side groups, linked to a central contract node
+- `generate_person_relationships(vault, target, output)` -- generates radial canvas of a person's relationships from frontmatter and wikilinks
+- `generate_project_roadmap(vault, target, output)` -- generates timeline canvas of project milestones and stages
+- `generate_counterparty_map(vault, output)` -- generates map of all counterparties with contract connections
+- `layout_radial(cx, cy, radius, count)` -- computes positions on a circle
+- `layout_tree(x, y, children_count, spacing)` -- computes top-down tree positions
+- `layout_timeline(x_start, y, count, spacing)` -- computes left-to-right timeline positions
+- `build_canvas(nodes, edges)` -- assembles canvas structure from nodes and edges
+- `save_canvas(canvas, output_path)` -- saves canvas JSON to file
+
+**Output:** `.canvas` file in `12-КАНВАСЫ/` (or custom path)
+
+---
+
+## archive_manager.py
+
+**Purpose:** Archive management: scan for archival candidates, move notes to `99-АРХИВ/` with frontmatter updates, generate archive reports.
+
+**CLI:**
+```bash
+python scripts/archive_manager.py --vault PATH [-v] scan
+python scripts/archive_manager.py --vault PATH [-v] archive [--folder FOLDER] [--filter "key:value"] [--days-old N] [--dry-run]
+python scripts/archive_manager.py --vault PATH [-v] report
+```
+
+**Dependencies:** none (stdlib only)
+
+**Key functions:**
+- `scan_candidates(vault)` -- scans vault for archival candidates: completed/cancelled contracts and projects, completed goals past deadline, events older than 90 days
+- `archive_notes(vault, folder, filter_expr, days_old, dry_run)` -- archives notes matching criteria with optional folder, filter, and age constraints
+- `archive_report(vault)` -- generates Markdown report of archive contents by subfolder with recent archival dates
+- `_move_to_archive(vault, note_path, reason)` -- moves a note to `99-АРХИВ/{original_folder}/`, updates frontmatter with `архивирован` date and history entry
+- `_update_frontmatter_field(text, key, value)` -- adds or updates a field in frontmatter
+- `_append_history(text, entry)` -- appends entry to `## История изменений` section
+
+**Output:** `scan` and `archive` output JSON to stdout; `report` outputs Markdown to stdout
+
+---
+
+## import_meeting.py
+
+**Purpose:** Import meeting summaries from text, transcription (Whisper/Otter format), or .docx files into `06-ПЕРЕГОВОРЫ/` notes with automatic extraction of participants, decisions, tasks, and discussion topics.
+
+**CLI:**
+```bash
+python scripts/import_meeting.py --vault PATH --file PATH \
+  [--counterparty "ООО Пример"] [--date YYYY-MM-DD] \
+  [--format auto|text|transcript|docx] [--dry-run] [-v]
+```
+
+**Dependencies:** python-docx (for .docx format only)
+
+**Key functions:**
+- `import_meeting(vault, filepath, counterparty, date_str, fmt, dry_run)` -- main import function: detects format, parses content, builds meeting note, optionally creates contact cards
+- `detect_format(filepath)` -- auto-detects file format (text, transcript, docx) by extension and content analysis
+- `extract_participants(text)` -- extracts participant names (full and abbreviated Russian FIO patterns)
+- `extract_decisions(text)` -- extracts decisions by keyword patterns (решено, договорились, согласовано, утверждено)
+- `extract_tasks(text)` -- extracts tasks by keyword patterns (поручить, выполнить, сделать, подготовить)
+- `parse_text(text)` -- parses plain text format
+- `parse_transcript(text)` -- parses transcription format (strips timestamps and speaker markers)
+- `parse_docx(filepath)` -- reads .docx file to plain text
+- `build_meeting_note(data, date_str, counterparty)` -- generates full .md content for a negotiation note
+
+**Output:** Meeting note in `06-ПЕРЕГОВОРЫ/`, optional contact cards in `05-КОНТАКТЫ/`, JSON result to stdout
+
+---
+
+## quick_capture.py
+
+**Purpose:** Rapid creation of notes from a single line of text. Supports ideas (to `09-СТРАТЕГИЯ/Идеи/`), events (to `07-ОПЕРАЦИИ/`), and tasks (appended to today's daily record in `08-КАЛЕНДАРЬ/`).
+
+**CLI:**
+```bash
+python scripts/quick_capture.py --vault PATH --type идея --text "Текст идеи" \
+  [--direction DIR] [--priority PRI] [--link "Цель"] [--author "Имя"] [-v]
+python scripts/quick_capture.py --vault PATH --type событие --text "Описание события" \
+  [--direction DIR] [--priority PRI] [-v]
+python scripts/quick_capture.py --vault PATH --type задача --text "Текст задачи" [-v]
+```
+
+**Dependencies:** none (stdlib only)
+
+**Key functions:**
+- `capture_idea(vault, text, direction, priority, link, author)` -- creates an idea note in `09-СТРАТЕГИЯ/Идеи/` with full template (problem, expected result, resources, validation steps)
+- `capture_event(vault, text, direction, priority)` -- creates an event note in `07-ОПЕРАЦИИ/` with description, measures, and result sections
+- `capture_task(vault, text)` -- adds a task to today's daily record in `08-КАЛЕНДАРЬ/`; creates the daily record from template if it does not exist
+
+**Supported types:** `идея`, `событие`, `задача`

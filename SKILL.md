@@ -13,7 +13,7 @@ compatibility: >-
   pymorphy3-dicts-ru, vobject. Works with Claude Code, Codex CLI, OpenCode.
 metadata:
   author: cifratronika
-  version: "1.0.0"
+  version: "1.1.0"
   lang: ru
 ---
 
