@@ -216,7 +216,7 @@ class TestExtractParticipantsDetailed:
 
 
 @pytest.mark.unit
-@pytest.mark.xfail(reason="Regex pattern mismatch")
+@pytest.mark.xfail(reason="Regex pattern edge case")
 class TestExtractDecisionsDetailed:
     """Additional tests for extract_decisions."""
 
@@ -240,7 +240,7 @@ class TestExtractDecisionsDetailed:
 
 
 @pytest.mark.unit
-@pytest.mark.xfail(reason="Regex pattern mismatch")
+@pytest.mark.xfail(reason="Regex pattern edge case")
 class TestExtractTasksDetailed:
     """Additional tests for extract_tasks."""
 
